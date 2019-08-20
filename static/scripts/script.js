@@ -1,7 +1,11 @@
 import {setHoverAnimation, setClickAnimation, coordinateList, URLify, jQueryFlags} from "/static/scripts/auxfns.js/";
 let dragReady = false;
 let navUp = true;
-let position = -565;
+
+let position = 0;
+let dragoffset = 0;
+let move = 0;
+let currPos = 0;
 let prevPos = 0;
 
 const initWindowEvents = () => {
@@ -11,23 +15,24 @@ const initWindowEvents = () => {
 	});
 	window.addEventListener("mousemove", function(event) {
 		if (dragReady == true) {
-			let currPos = event.clientY;
-			let move = currPos - prevPos;
-			if (move < 5) {
-				position = -565;
-			}
-			if (move > -5) {
-				position = 0;
-			}
-			move = 0;
-			if (position > 0) {		
-				position = 0;
+			currPos = event.pageY;
+			position = event.pageY + dragoffset;
+			move = prevPos - currPos;
+			if (position > 565) {
+				position = 565;
 			} 
-			if (position < -565) {
-				position = -565;
+			if (position < 0) {
+				position = 0;
 			}
-			flexcontainer.style.transform = "translateY(" + String(position) + "px)";
-			prevPos = event.clientY;
+
+			if (move < -20) {
+				position = 565;
+			}
+			if (move > 20) {
+				position = 0;
+			}
+			flexcontainer.style.top = String(position) + "px";
+			prevPos = event.pageY;
 		}
 
 	});
@@ -36,9 +41,9 @@ const initWindowEvents = () => {
 const navClick = (obj) => {
 	obj.addEventListener("click", function() {
 		if (navUp == true) {
-			$(".flex-container").css("transform", "translateY(0px)");
+			$(".flex-container").css("top", "565px");
 		} else {
-			$(".flex-container").css("transform", "translateY(-565px)");
+			$(".flex-container").css("top", "0px");
 		}
 		navUp = !navUp;
 	});
@@ -52,17 +57,8 @@ const navDrag = (obj) => {
 		return false;
 	});
 	obj.addEventListener("mousedown", function(event) {
+		dragoffset = position - event.clientY; //current mouseposition
 		dragReady = true;
-	});
-	obj.addEventListener("click", function(event) {
-		if (navUp == true) {
-			jflexcontainer.css("transform", "translateY(0%)");
-			position = 0;
-		} else {
-			jflexcontainer.css("transform", "translateY(-90%)");
-			position = -90;
-		}
-		navUp = !navUp;
 	});
 }
 const stopVideo = () => {
