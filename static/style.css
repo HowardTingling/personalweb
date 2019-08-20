@@ -12,7 +12,7 @@ body {
 .flex-container {
 	padding: 5px;
 	margin: 0;
-	position:fixed;
+	position:absolute;
 	right:0;
 	list-style: none;
 	-ms-box-orient: horizontal;
@@ -31,6 +31,11 @@ body {
 	    -ms-transition: transform .4s ease-in;
 	     -o-transition: transform .4s ease-in;
 	        transition: transform .4s ease-in;
+}
+
+.flex-container::after {
+	display:block;
+	clear:both;
 }
 
 .flex-item {
@@ -138,6 +143,7 @@ body {
 }
 
 #playbox {
+	display:none;
 	position:fixed;
 	float:left;
 	margin: 6px;
